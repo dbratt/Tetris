@@ -1,65 +1,84 @@
 #include "Figure.h"
 
-Figure::Figure(Point _globCoord) : globCoord(_globCoord), globCoordOld(_globCoord){
+Figure::Figure(Point _globCoord) : globCoord(_globCoord), globCoordOld(_globCoord)
+{
+    Shape = GenerateShape();
 
-    Shape = Generate();
+    Color = GenerateColor();
 
     Rotation = rand() % Shape.size();
 
     //RotationOld = Rotation;
 }
 
-Point Figure::getGlobCord(){
+Point Figure::getGlobCord()
+{
     return globCoord;
 }
 
-std::vector<Point> Figure::getShape(){
+std::vector<Point> Figure::getShape()
+{
     return Shape[Rotation];
 }
 
+WORD Figure::getColor()
+{
+    return Color;
+}
 
-void Figure::Update(double dt){
+void Figure::Update(double dt, double FPS)
+{
     currentTime += dt;
-    if(currentTime > FPS){
+    if(currentTime > FPS)
+    {
         currentTime = 0.0;
         ++globCoord.y;
     }
 }
 
-void Figure::moveLeft(){
+void Figure::moveLeft()
+{
     --globCoord.x;
 }
 
-void Figure::moveRight(){
+void Figure::moveRight()
+{
     ++globCoord.x;
 }
 
-void Figure::moveDown(){
+void Figure::moveDown()
+{
     ++globCoord.y;
 }
 
-void Figure::rotateLeft(){
+void Figure::rotateLeft()
+{
     --Rotation;
     if (Rotation < 0) Rotation = Shape.size()-1;
 }
 
-void Figure::rotateRight(){
+void Figure::rotateRight()
+{
     ++Rotation;
     if (Rotation >= Shape.size()) Rotation = 0;
 }
 
-void Figure::Backup(){
+void Figure::Backup()
+{
     globCoordOld = globCoord;
     RotationOld = Rotation;
 }
 
-void Figure::Restore(){
+void Figure::Restore()
+{
     globCoord = globCoordOld;
     Rotation = RotationOld;
 }
 
-std::vector<std::vector<Point>> Figure::Generate(){
-    switch(rand() % 7){
+std::vector<std::vector<Point>> Figure::GenerateShape()
+{
+    switch(rand() % 7)
+    {
         case 0: return { // I
                         {Point(-1, 0), Point(0, 0), Point(1, 0), Point(2, 0)},
                         {Point(0, -1), Point(0, 0), Point(0, 1), Point(0, 2)},
@@ -99,5 +118,18 @@ std::vector<std::vector<Point>> Figure::Generate(){
         case 6: return { // Q
                         {Point(0, 0), Point(1, 0), Point(0, 1), Point(1, 1)}
                        };
+    }
+}
+
+WORD Figure::GenerateColor()
+{
+    switch(rand() % 6)
+    {
+        case 0: return FOREGROUND_RED | FOREGROUND_INTENSITY;
+        case 1: return FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+        case 2: return FOREGROUND_BLUE | FOREGROUND_INTENSITY;
+        case 3: return  FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+        case 4: return  FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
+        case 5: return  FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY;
     }
 }

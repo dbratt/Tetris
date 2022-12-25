@@ -2,9 +2,11 @@
 
 #include <cstdlib>
 #include <vector>
+#include <windows.h>
+#include <iostream>
 
-struct Point{
-
+struct Point
+{
     Point (int _x, int _y) : x(_x), y(_y) {}
 
     int x;
@@ -20,7 +22,9 @@ class Figure{
 
         std::vector<Point> getShape();
 
-        void Update(double dt);
+        WORD getColor();
+
+        void Update(double dt, double FPS);
 
         void moveLeft();
 
@@ -40,11 +44,14 @@ class Figure{
         Point globCoord;
         Point globCoordOld;
         std::vector<std::vector<Point>> Shape;
+        WORD Color;
         int Rotation;
         int RotationOld;
 
         double currentTime;
-        double FPS = 150;
 
-        std::vector<std::vector<Point>> Generate();
+        std::vector<std::vector<Point>> GenerateShape();
+
+        WORD GenerateColor();
+
 };
